@@ -2,12 +2,9 @@
 
 ## Use the Google Vertex API to send request to the Gemini Pro and Gemini Pro Vision LLMs
 
-### Google Cloud SDK login
-```
-gcloud init
+![My Project Screenshot](workspace\Escalade_test.png)
 
-gloud auth login
-```
+# Getting Started
 
 ### Create a Conda Environment and install dependencies
 
