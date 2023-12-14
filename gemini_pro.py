@@ -62,13 +62,13 @@ async def ask_gemini_pro(question):
         # Set the safety settings to block all harmful content
         safety_settings={
             HarmCategory.HARM_CATEGORY_HATE_SPEECH:
-                HarmBlockThreshold.BLOCK_NONE,
+                HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
             HarmCategory.HARM_CATEGORY_HARASSMENT:
-                HarmBlockThreshold.BLOCK_NONE,
+                HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
             HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT:
-                HarmBlockThreshold.BLOCK_NONE,
+                HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
             HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT:
-                HarmBlockThreshold.BLOCK_NONE,
+                HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
         },
         stream=True,
     )
@@ -110,13 +110,13 @@ async def ask_gemini_pro_vision(question, source_folder, specific_file_name):
     # Set the safety settings
     safety_settings = {
         HarmCategory.HARM_CATEGORY_HATE_SPEECH:
-            HarmBlockThreshold.BLOCK_ONLY_HIGH,
+            HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
         HarmCategory.HARM_CATEGORY_HARASSMENT:
-            HarmBlockThreshold.BLOCK_ONLY_HIGH,
+            HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
         HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT:
-            HarmBlockThreshold.BLOCK_ONLY_HIGH,
+            HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
         HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT:
-            HarmBlockThreshold.BLOCK_ONLY_HIGH,
+            HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
     }
 
     # Create a GenerativeModel object for the Gemini Pro Vision model
