@@ -4,7 +4,11 @@
 
 ![My Project Screenshot](workspace/test_image_result.png)
 
-# Getting Started
+
+### Pre-requisites
+https://cloud.google.com/sdk/docs/install
+
+https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html
 
 ### Create a Conda Environment and install dependencies
 
