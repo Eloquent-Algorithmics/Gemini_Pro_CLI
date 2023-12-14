@@ -59,7 +59,7 @@ async def ask_gemini_pro(question):
             "top_p": 0.5,
             "top_k": 25,
         },
-        # Set the safety settings to block all harmful content
+        # Set the safety settings to block harmful content
         safety_settings={
             HarmCategory.HARM_CATEGORY_HATE_SPEECH:
                 HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
@@ -107,7 +107,7 @@ async def ask_gemini_pro_vision(question, source_folder, specific_file_name):
         "top_k": 32,
     }
 
-    # Set the safety settings
+    # Set the safety settings to block harmful content
     safety_settings = {
         HarmCategory.HARM_CATEGORY_HATE_SPEECH:
             HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
