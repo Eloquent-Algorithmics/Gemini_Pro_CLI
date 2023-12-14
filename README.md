@@ -18,6 +18,8 @@ gloud auth login
 ### Run Gemini Pro CLI
 
 ```
+conda activate gemini
+
 python -m gemini_pro
 ```
 
