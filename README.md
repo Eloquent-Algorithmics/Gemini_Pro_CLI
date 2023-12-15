@@ -2,7 +2,7 @@
 
 ## Use the Google Vertex API to send request to the Gemini Pro and Gemini Pro Vision LLMs
 
-![My Project Screenshot](workspace/test_image_result.png)
+![My Project Screenshot](test_image_result.png)
 
 
 ### Pre-requisites
