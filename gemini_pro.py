@@ -1,6 +1,3 @@
-"""
-This is the gemini pro module.
-"""
 import os
 import base64
 import asyncio
@@ -11,7 +8,22 @@ from vertexai.preview.generative_models import (
     HarmCategory,
     HarmBlockThreshold,
     Part,
+    ChatSession,
 )
+from rich.console import Console
+from rich.markdown import Markdown
+from rich.panel import Panel
+from rich.prompt import Prompt
+from rich.traceback import install
+
+# Enable pretty printing of exceptions with Rich
+install()
+
+# Load the spaCy model
+nlp = spacy.load("en_core_web_sm")
+
+# Create a console object for rich printing
+console = Console()
 
 # Load the spaCy model
 nlp = spacy.load("en_core_web_sm")
@@ -42,54 +54,33 @@ def extract_filename(text):
         filenames.append(span.text)
 
     # Debugging: print the extracted filenames
-    print("Extracted filenames:", filenames)
+    # print("Extracted filenames:", filenames)
 
     return filenames
 
+model = GenerativeModel("gemini-pro")
+chat = model.start_chat(history=[])
+
 
 async def ask_gemini_pro(question):
-    """Ask Gemini Pro a question and print the response."""
-    model = GenerativeModel("gemini-pro")
-    responses = model.generate_content(
-        question,
-        # Set the generation configuration
-        generation_config={
-            "max_output_tokens": 512,
-            "temperature": 0.5,
-            "top_p": 0.5,
-            "top_k": 25,
-        },
-        # Set the safety settings to block harmful content
-        safety_settings={
-            HarmCategory.HARM_CATEGORY_HATE_SPEECH:
-                HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-            HarmCategory.HARM_CATEGORY_HARASSMENT:
-                HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-            HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT:
-                HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-            HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT:
-                HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-        },
-        stream=True,
-    )
+    """Ask Gemini Pro a question and print the response using ChatSession."""
+    # Send the message to the chat session and get the response
+    response = chat.send_message(question)
 
-    for response in responses:
-        # Debugging: Check if 'candidates' list is not empty
-        if not response.candidates:
-            print("No candidates found in the response.")
-            continue
-
-        # Debugging: Check if 'parts' list is not empty
-        if not response.candidates[0].content.parts:
-            print("No parts found in the candidate's content.")
-            continue
-
-        # If both lists are not empty, proceed to print the text
-        print(response.candidates[0].content.parts[0].text)
+    # Print the response text
+    for part in response.candidates[0].content.parts:
+        console.print(part.text, style="bold green")
 
 
 async def ask_gemini_pro_vision(question, source_folder, specific_file_name):
-    """Ask Gemini Pro Vision a question about a specific file."""
+    """
+    Ask Gemini Pro Vision a question about a specific image file.
+
+    Args:
+        question: The question to ask.
+        source_folder: The folder containing the image file.
+        specific_file_name: The name of the image file.
+    """
     # Read the image file as bytes and encode it with base64
     image_path = os.path.join(source_folder, specific_file_name)
     with open(image_path, "rb") as image_file:
@@ -133,25 +124,28 @@ async def ask_gemini_pro_vision(question, source_folder, specific_file_name):
     # Handle the responses
     for response in responses:
         if response.candidates:
-            print(response.candidates[0].content.parts[0].text)
+            console.print(response.candidates[0].content.parts[0].text, style="bold green")
         else:
-            print("No response candidates found.")
+            console.print("No response candidates found.")
 
 
 async def main():
     """Main function."""
+    # Clear the console screen before displaying the welcome message
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+    console.print(Markdown("# Welcome to Gemini Pro"), style="bold magenta")
     while True:
-        user_input = input("Ask your question (or type 'exit' to quit): ")
+        user_input = Prompt.ask("\nAsk your question (or type 'exit' to quit)", default="exit")
         if user_input.lower() == 'exit':
-            print("Exiting the program.")
+            console.print("\nExiting the program.", style="bold red")
             break
         else:
-            # Extract the specific file name from the user input
             specific_file_names = extract_filename(user_input)
-
-            # Debugging: print which function will be called
+            # Add two blank lines after user input
+            console.print("\n")
             if specific_file_names:
-                print("Calling ask_gemini_pro_vision")
+                # console.print("Calling ask_gemini_pro_vision", style="bold yellow")
                 specific_file_name = specific_file_names[0]
                 await ask_gemini_pro_vision(
                     user_input,
@@ -159,9 +153,10 @@ async def main():
                     specific_file_name
                 )
             else:
-                print("Calling ask_gemini_pro")
+                # console.print("Calling ask_gemini_pro", style="bold yellow")
                 await ask_gemini_pro(user_input)
-
+            # Add one blank line after the model's response
+            # console.print("\n")
 
 if __name__ == "__main__":
     asyncio.run(main())
